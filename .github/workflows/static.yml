@@ -1,0 +1,4 @@
+- name: Convert notebooks to HTML
+  run: |
+    pip install nbconvert jupyter
+    jupyter nbconvert --to html notebooks/*.ipynb
