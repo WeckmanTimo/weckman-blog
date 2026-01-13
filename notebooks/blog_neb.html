@@ -157,7 +157,7 @@ window.Quarto = {
 <p><span class="math display">\[\mathbf{F}_{i, \text{max}} = -\nabla V(\mathbf{R}_{i, \text{max}}) + \left[2\nabla V(\mathbf{R}_{i, \text{max}})\cdot \hat{\tau}_{i, \text{max}}\right] \hat{\tau}_{i, \text{max}}.\]</span></p>
 <p>We’ll use the steepest descent method with a fixed step size to minimize the energy of the band. In steepest descent, we follow the direction of the steepest descent (i.e.&nbsp;the force vector) and update the coordinates of each image consecutively using a fixed step size.</p>
 <p>In addition to Numpy, we’ll use Sympy library for symbolic calculation to do the partial derivatives of the potential function. Let’s begin by defining the potential energy surface for our system.</p>
-<div id="8ee728d9-a738-46af-9e18-8af6e58e4ffc" class="cell" data-execution_count="20">
+<div id="8ee728d9-a738-46af-9e18-8af6e58e4ffc" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sympy <span class="im">as</span> sp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -167,7 +167,7 @@ window.Quarto = {
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>V_sp <span class="op">=</span> sp.exp(<span class="op">-</span>sp.cos(<span class="dv">2</span><span class="op">*</span>sp.pi<span class="op">*</span>x) <span class="op">-</span> sp.cos(sp.pi<span class="op">*</span>(y<span class="op">-</span>x))) <span class="op">-</span> sp.exp(<span class="op">-</span>sp.cos(sp.pi<span class="op">*</span>y))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Next, we’ll compute the partial derivatives of the potential energy function and convert the experssions into a separate functions using the <em>lambdify</em>-function. We can then readily use these functions in our NEB procedure. We can use the <em>latex</em>-function in Sympy to print out Latex expressions for our partial derivatives. A similar <em>python</em> or <em>print_python</em> function would give an expression in Python that could then be defined separately.</p>
-<div id="d6bd9168-eb2f-4f57-8168-8a3ef7c39fa4" class="cell" data-execution_count="21">
+<div id="d6bd9168-eb2f-4f57-8168-8a3ef7c39fa4" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the partial derivatives using Sympy</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>dVx_sp <span class="op">=</span> sp.diff(V_sp, x)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>dVy_sp <span class="op">=</span> sp.diff(V_sp, y)</span>
@@ -187,7 +187,7 @@ window.Quarto = {
 <p><span class="math display">\[\frac{\partial V}{\partial x} = \left(2 \pi \sin{\left(2 \pi x \right)} - \pi \sin{\left(\pi \left(- x + y\right) \right)}\right) e^{- \cos{\left(2 \pi x \right)} - \cos{\left(\pi \left(- x + y\right) \right)}}\]</span></p>
 <p><span class="math display">\[\frac{\partial V}{\partial y} = \pi e^{- \cos{\left(2 \pi x \right)} - \cos{\left(\pi \left(- x + y\right) \right)}} \sin{\left(\pi \left(- x + y\right) \right)} - \pi e^{- \cos{\left(\pi y \right)}} \sin{\left(\pi y \right)}\]</span></p>
 <p>Finally, let’s plot the potential energy surface as a contour plot. The points <span class="math inline">\([0,1]\)</span> and <span class="math inline">\([1,1]\)</span> are two minima on the PES. We’ll be using these as the initial and final points, respectively. We’ll mark these two points down using a red dot.</p>
-<div id="3ab1a0bd-b3a0-4ba1-a301-426fe821eb40" class="cell" data-execution_count="22">
+<div id="3ab1a0bd-b3a0-4ba1-a301-426fe821eb40" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -212,7 +212,7 @@ window.Quarto = {
 </div>
 </div>
 <p>We’ll begin by defining an initial guess for the minimum energy path. A good initial guess is crucial for the accuracy of the minimum energy path, since we really only relax the initial guess and do not explore the potential energy surface beyond our guess. A linear interpolation between the initial and final states is a common approximation.</p>
-<div id="86545353-dad6-454d-b88f-86892e372dac" class="cell" data-execution_count="23">
+<div id="86545353-dad6-454d-b88f-86892e372dac" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initial state (0,1)</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Final state (1,1)</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -228,7 +228,7 @@ window.Quarto = {
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>images <span class="op">=</span> np.array(images)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Next, we’ll initialize the forces and energies of the system. The forces will be used in our <strong>steepest descent</strong> optimization scheme and the energies are used for defining the path vector and for choosing the climbing image, each cycle.</p>
-<div id="4118a145-3db0-40da-8a1d-071387e96cbb" class="cell" data-execution_count="24">
+<div id="4118a145-3db0-40da-8a1d-071387e96cbb" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># List of forces on all images (init and final states will remain stationary)</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>forces <span class="op">=</span> np.zeros((<span class="bu">len</span>(images),<span class="dv">2</span>))</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>energies <span class="op">=</span> np.zeros((<span class="bu">len</span>(images),))</span>
@@ -237,7 +237,7 @@ window.Quarto = {
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>energies[<span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> V(images[<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>], images[<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Next, we’ll define the NEB procedure. First, we’ll evaluate the energy of each image and then loop over all the images in our band and, 1. Construct the path vector 2. Normalize the path vector 3. Compute the <em>real</em> force 4. Compute the spring force 5. Apply the forces in the optimization</p>
-<div id="b6c9b81f-2de4-40e6-bf48-a8a8d341a51f" class="cell" data-execution_count="25">
+<div id="b6c9b81f-2de4-40e6-bf48-a8a8d341a51f" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># NEB parameters</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>step_size <span class="op">=</span> <span class="fl">0.01</span> <span class="co"># Step size for optimisation1</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>k <span class="op">=</span> <span class="fl">0.005</span> <span class="co"># Spring constant for the harmonic force</span></span>
@@ -285,7 +285,7 @@ Exact saddlepoint at (0.427, 0.777) with energy -0.5910308</code></pre>
 </div>
 </div>
 <p>We find a saddle point very close to an exact solution. Let’s plot our initial and the optimized NEB paths on the potential energy surface.</p>
-<div id="6f8c1ac8-50b6-4a5c-8ced-cf7a7017da1f" class="cell" data-execution_count="26">
+<div id="6f8c1ac8-50b6-4a5c-8ced-cf7a7017da1f" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">0.4</span>, <span class="fl">1.2</span>, <span class="dv">40</span>)</span>
@@ -310,7 +310,7 @@ Exact saddlepoint at (0.427, 0.777) with energy -0.5910308</code></pre>
 </div>
 </div>
 <p>Let’s animate the path to see how the band relaxes onto the minimum energy path.</p>
-<div id="c88dce65-8951-4a72-9537-34d04baaf77c" class="cell" data-execution_count="27">
+<div id="c88dce65-8951-4a72-9537-34d04baaf77c" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.animation <span class="im">import</span> FuncAnimation</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> HTML</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -339,7 +339,7 @@ Exact saddlepoint at (0.427, 0.777) with energy -0.5910308</code></pre>
 <span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Create animation</span></span>
 <span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>ani <span class="op">=</span> FuncAnimation(fig, update, frames<span class="op">=</span><span class="bu">range</span>(<span class="dv">80</span>), blit<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>HTML(ani.to_html5_video())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="27">
+<div class="cell-output cell-output-display" data-execution_count="8">
 <video width="640" height="480" controls="" autoplay="" loop="">
   <source type="video/mp4" src="data:video/mp4;base64,AAAAIGZ0eXBNNFYgAAACAE00ViBpc29taXNvMmF2YzEAAAAIZnJlZQABp3NtZGF0AAACrwYF//+r
 3EXpvebZSLeWLNgg2SPu73gyNjQgLSBjb3JlIDE2MSByMzAzME0gOGJkNmQyOCAtIEguMjY0L01Q
