@@ -1,6 +1,14 @@
 [
   {
-    "listing": "/blog/index.html",
+    "listing": "/blog_index.html",
+    "items": [
+      "/blog/blog_neb.html",
+      "/blog/blog_tddft_c6.html",
+      "/blog/blog_compute_solvation.html"
+    ]
+  },
+  {
+    "listing": "/index.html",
     "items": [
       "/blog/blog_neb.html",
       "/blog/blog_tddft_c6.html",

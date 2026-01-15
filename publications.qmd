@@ -239,6 +239,6 @@
 </section>
 
 <p>
-    A complete list, including supplementary material and data, is available on
+    An up-to-date list, including links to the publciations can be found on 
     <a href="https://scholar.google.fi/citations?user=JLvgAfYAAAAJ">Google Scholar</a>.
 </p>

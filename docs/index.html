@@ -30,6 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-listing/list.min.js"></script>
+<script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -68,7 +70,65 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
 
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-title','listing-author','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-title","listing-author","listing-image","listing-description"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="assets/css/custom.css">
 </head>
@@ -99,7 +159,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./blog/index.html"> 
+    <a class="nav-link" href="./blog_index.html"> 
 <span class="menu-text">Blog posts</span></a>
   </li>  
 </ul>
@@ -132,24 +192,78 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="about-me" class="level2">
 <h2 class="anchored" data-anchor-id="about-me">About me</h2>
-<p>This is the homepage of Timo Weckman, PhD. I am a university researcher working on computational chemistry, with focus on heterogeneous catalysis, electrochemistry and surface chemistry. Here I have collected some notes and tutorials for those who come after.</p>
+<p>I am a university researcher at the University of Jyväskylä, working on heterogeneous catalysis, electrochemistry and surface chemistry. I have a Master’s degree in Chemical Technology and a PhD in Computational Chemistry from Aalto University as well as Master’s degree from Mathematics from the University of Helsinki and a strong background in chemistry, physics and programming. I have a lot of experience in interdisciplinary collaboration, communicating my own work to colleagues and helping them to apply my results in their work. I also have a long history of teaching to a wide range of audiences, from freshmen to graduate students. My publication list can be found <a href="./publications.html">here</a>.</p>
+<p>Below I have collected some notes and tutorials. For those who come after.</p>
 </section>
-<section id="publications" class="level2 g-col-4">
-<h2 class="anchored" data-anchor-id="publications">Publications</h2>
-<p>Peer-reviewed articles and preprints. <a href="./publications.html">View →</a></p>
-</section>
-<section id="notes-notebooks" class="level2">
-<h2 class="anchored" data-anchor-id="notes-notebooks">Notes &amp; Notebooks</h2>
-<ul>
-<li><a href="./blog/blog_neb.html">Let’s build! Nudged elastic band method from first principles</a></li>
-<li><a href="./blog/blog_tddft_c6.html">How to: Dispersion coefficients from TDDFT</a></li>
-<li><a href="./blog/blog_compute_solvation.html">How to: Solvation energy for ionic species using DFT</a></li>
-</ul>
+<section id="blog-posts" class="level2">
+<h2 class="anchored" data-anchor-id="blog-posts">Blog posts</h2>
+
 
 
 </section>
 
-</main> <!-- /main -->
+<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-listing-file-modified-sort="1768462638052" data-listing-reading-time-sort="6" data-listing-word-count-sort="1043">
+<div class="thumbnail"><a href="./blog/blog_neb.html" class="no-external">
+
+<p class="card-img-top"><img src="blog/blog_neb_files/figure-html/cell-4-output-1.png"  class="thumbnail-image card-img"/></p>
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./blog/blog_neb.html" class="no-external">Let’s build! Nudged elastic band method from first principles</a>
+</h3>
+<div class="delink listing-description"><a href="./blog/blog_neb.html" class="no-external">
+Nudged elastic band method, or NEB for short, is an algorithm for search a minimum energy pathway between two point on a multi-dimensional potential energy surface (PES).…
+</a></div>
+</div>
+<div class="metadata">
+<a href="./blog/blog_neb.html" class="no-external">
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-listing-file-modified-sort="1768462638052" data-listing-reading-time-sort="5" data-listing-word-count-sort="850">
+<div class="thumbnail"><a href="./blog/blog_tddft_c6.html" class="no-external">
+
+<p class="card-img-top"><img src="blog/blog_tddft_c6_files/figure-html/cell-8-output-1.png"  class="thumbnail-image card-img"/></p>
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./blog/blog_tddft_c6.html" class="no-external">How to: Dispersion coefficients from TDDFT</a>
+</h3>
+<div class="delink listing-description"><a href="./blog/blog_tddft_c6.html" class="no-external">
+Dispersion interaction is a weak attractive interaction that binds even neutral, noble gas atoms to each other. Dispersion interaction sometimes mistakenly called the van…
+</a></div>
+</div>
+<div class="metadata">
+<a href="./blog/blog_tddft_c6.html" class="no-external">
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="2" data-listing-file-modified-sort="1768462638051" data-listing-reading-time-sort="4" data-listing-word-count-sort="764">
+<div class="thumbnail"><a href="./blog/blog_compute_solvation.html" class="no-external">
+
+<p class="card-img-top"><img src="blog/blog_compute_solvation_files/figure-html/cell-2-output-1.png"  class="thumbnail-image card-img"/></p>
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./blog/blog_compute_solvation.html" class="no-external">How to: Solvation energy for ionic species using DFT</a>
+</h3>
+<div class="delink listing-description"><a href="./blog/blog_compute_solvation.html" class="no-external">
+The dielectric continuum solvent models facilitate the modelling of chemical reactions is condensed phases. The dielectric continuum models the effect of the solvent and can…<span class="math inline"></span>
+</a></div>
+</div>
+<div class="metadata">
+<a href="./blog/blog_compute_solvation.html" class="no-external">
+</a>
+</div>
+</div>
+</div>
+<div class="listing-no-matching d-none">No matching items</div>
+</div></main> <!-- /main -->
 <footer>
     © 2026 Timo Weckman
 </footer>
