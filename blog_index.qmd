@@ -3,5 +3,5 @@ title: "Blog posts"
 listing:
   contents: blog
   type: default
-  sort: date desc
+  sort: title desc
 ---
