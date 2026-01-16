@@ -24,5 +24,5 @@ Below I have collected some notes and tutorials. For those who come after.
 listing:
   contents: blog
   type: default
-  sort: date desc
+  sort: title desc
 ---
