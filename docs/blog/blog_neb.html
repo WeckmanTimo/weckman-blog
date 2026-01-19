@@ -225,21 +225,21 @@ window.Quarto = {
 
 <section id="the-nudged-elastic-band-method" class="level3">
 <h3 class="anchored" data-anchor-id="the-nudged-elastic-band-method">The nudged elastic band method</h3>
-<p>Nudged elastic band method, or NEB for short, is an algorithm for search a minimum energy pathway between two point on a multi-dimensional potential energy surface (PES). The idea is to span an initial pathway on the PES between the initial and final points. Each point (or image) on the pathway is connected to one another via a spring force. The energy of the overall path (or band, since the path is essentially elastic due to the spring force) is then minimized. After optimization, the band should lie along the minimum energy pathway.</p>
-<p>Here, we’ll define a simple two dimensional version of the NEB by solving the minimum energy on a potential energy surface, defined as</p>
-<p><span class="math display">\[V(x,y) = \exp\left[-\cos(2\pi x) - \cos(\pi (y-x))\right] - \exp\left[-\cos(2\pi y)\right]\]</span></p>
-<p>We’ll use the <em>climbing image</em> variant of NEB, since it ensures we find that saddle point along the minimum energy path that corresponds to the highest peak along the path.</p>
+<p>Nudged elastic band method, or NEB for short, is an algorithm to find a minimum energy pathway between two point on a multi-dimensional potential energy surface (PES). The idea is to span the pathway on the PES between the initial and final points into increments, each point (or image) on the pathway connected to one another via a spring force. The energy of the overall path (or band, since the path is essentially elastic due to the spring force) is then minimized. After optimization, the band should lie along the minimum energy pathway (MEP).</p>
+<p>In this tutorial, we’ll construct and apply an NEB procedure to a simple two dimensional potential energy surface, defined as</p>
+<p><span class="math display">\[V(x,y) = \exp\left[-\cos(2\pi x) - \cos(\pi (y-x))\right] - \exp\left[-\cos(2\pi y)\right].\]</span></p>
+<p>We’ll use the <em>climbing image</em> variant of NEB, where we’ll find the saddle point along the minimum energy path that corresponds to the highest peak along the path.</p>
 </section>
 <section id="the-neb-procedure" class="level3">
 <h3 class="anchored" data-anchor-id="the-neb-procedure">The NEB procedure</h3>
-<p>In NEB, the idea is to minimize the energy of each image, but remove the force component along the NEB path with a spring force. Why? If we were just to minimize the energy without the spring force, all the images would slide down the potential energy surface to the nearest minimum. The spring force binds the neighbouring images together and prevents them from moving too far apart. The spring force acts only along the path defined by the images. Orthogonal to the path we use the actual force acting on the images to minimize the energy. This way the band will aling itself with the shape of the potential energy surface.</p>
-<p>There are several way to define <strong>the path</strong> of the NEB band. Here we define it as the difference between the given image <span class="math inline">\(i\)</span> and the neighbours before and after it depending on what is the relative energies of the images:</p>
+<p>In NEB, we first define two close lying minima on the PES and construct an initial guess for the MEP. The guess is often done via interpolation. The idea in NEB is to perform energy minization on each image of the reaction path, but remove the force component along the NEB path with a spring force. Why? If we were just to minimize the energy without the spring force, all the images would slide down the potential energy surface to the nearest minimum. The spring force binds the neighbouring images together and prevents them from moving too far apart. The spring force acts only along the path defined by the images. Orthogonal to the path we use the actual force acting on the images to minimize the energy. This way the band will aling itself with the shape of the potential energy surface.</p>
+<p>There are several way to define <strong>the path</strong> of the NEB band. Here, we’ll define it as the difference between the given image <span class="math inline">\(i\)</span> and the neighbours before and after it depending on what is the relative energies of the images:</p>
 <p><span class="math display">\[\hat{\tau}_i = \begin{cases}
-\tau^+_i &amp;= \mathbf{R}_{i+1}-\mathbf{R}_{i} \;,\;\;\text{if} \;E(\mathbf{R}_{i+1}) &gt;E(\mathbf{R}_{i}) &gt; E(\mathbf{R}_{i-1}) \\
-\tau^-_i &amp;= \mathbf{R}_{i}-\mathbf{R}_{i-1} \;,\;\;\text{if} \;E(\mathbf{R}_{i+1}) &lt;E(\mathbf{R}_{i}) &lt; E(\mathbf{R}_{i-1}) \\
+\tau^+_i &amp;= \mathbf{R}_{i+1}-\mathbf{R}_{i} \;,\;\;\text{if} \;E(\mathbf{R}_{i+1}) &gt;E(\mathbf{R}_{i}) &gt; E(\mathbf{R}_{i-1}), \\
+\tau^-_i &amp;= \mathbf{R}_{i}-\mathbf{R}_{i-1} \;,\;\;\text{if} \;E(\mathbf{R}_{i+1}) &lt;E(\mathbf{R}_{i}) &lt; E(\mathbf{R}_{i-1}). \\
 \end{cases}\]</span></p>
 <p>If the potential energy of image <span class="math inline">\(i\)</span> is an extremum, the path is then <span class="math inline">\(\tau = \mathbf{R}_{i+1}-\mathbf{R}_{i-1}\)</span>. The pathvector is normalized.</p>
-<p>The forces is then divided into two orthogonal components, one parallel to the path and one orthogonal:</p>
+<p>The forces acting on each image are divided into two orthogonal components, one parallel to the path and one orthogonal:</p>
 <p><span class="math display">\[\mathbf{F}_i = \mathbf{F}_{i,\parallel} + \mathbf{F}_{i,\perp}.\]</span></p>
 <p>The parallel path is defined as a spring force that will ensure that the images do not all just fall down the PES to the their closest minimum:</p>
 <p><span class="math display">\[\mathbf{F}_{i,\parallel} = k(|\textbf{R}_{i+1}-\mathbf{R}_{i}| - |\mathbf{R}_{i}-\mathbf{R}_{i-1}|)\hat{\tau}_i,\]</span></p>
