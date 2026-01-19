@@ -232,16 +232,11 @@ window.Quarto = {
 <p><span class="math display">\[\Delta G_\text{bind, g} = \sum_i \nu_i G_\text{i} - \sum_a \nu_a G_a\]</span></p>
 <p>where <span class="math inline">\(i\)</span> and <span class="math inline">\(a\)</span> correspond to product and reactant species, respectively.</p>
 <p>The solvation energies are then computed using the electronic energies of the species (not including the enthalpy and entropy-terms used in gas-phase calculation). Often, especially for ionic systems, it is preferred to employ a hybrid solvation model, that is to use both explicit and implicit solvent together. This will signicantly improve the accuracy of our solvation energies.</p>
-<div id="ea38654f-1dc6-4efe-83dc-682f4752dabd" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display, Image</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>display(Image(filename<span class="op">=</span><span class="st">'scheme1.png'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="blog_compute_solvation_files/figure-html/cell-2-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="scheme1.png" class="img-fluid figure-img"></p>
+<figcaption>title</figcaption>
 </figure>
-</div>
-</div>
 </div>
 </section>
 <section id="example-calculations-using-pyscf" class="level3">
@@ -251,30 +246,30 @@ window.Quarto = {
 <h4 class="anchored" data-anchor-id="implicit-solvent-only">Implicit solvent only</h4>
 <p>We’ll define a simple system consisting of the copper-ion in gas-phase and with implicit solvent only.</p>
 <div id="e3cc45d2-2c6a-4622-8f6b-265e82a771ca" class="cell" data-tags="[]" data-execution_count="79">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyscf <span class="im">import</span> gto, scf, solvent</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>mol <span class="op">=</span> gto.Mole()</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>mol.atom <span class="op">=</span> <span class="st">'Cu 0 0 0'</span> </span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>mol.basis <span class="op">=</span> <span class="st">'def2-svp'</span> </span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>mol.charge <span class="op">=</span> <span class="dv">2</span> </span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>mol.spin <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>mol.build()</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>mf <span class="op">=</span> scf.UKS(mol)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>mf.xc <span class="op">=</span> <span class="st">'PBE'</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>mf.verbose <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>mf.run()</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Add implicit solvent</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>mf_solvent <span class="op">=</span> solvent.ddCOSMO(mf)</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>mf_solvent.with_solvent.eps <span class="op">=</span> <span class="fl">78.39</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>mf_solvent.verbose <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>mf_solvent.mo_coeff <span class="op">=</span> mf.mo_coeff</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>mf_solvent.run()</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Total energy in vacuum: </span><span class="sc">{</span>mf<span class="sc">.</span>e_tot<span class="sc">: .3f}</span><span class="ss"> Eh"</span>)</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Total energy in solvent: </span><span class="sc">{</span>mf_solvent<span class="sc">.</span>e_tot<span class="sc">: .3f}</span><span class="ss"> Eh"</span>)</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Solvation free energy: </span><span class="sc">{</span>(mf_solvent.e_tot <span class="op">-</span> mf.e_tot) <span class="op">*</span> <span class="fl">627.5</span><span class="sc">: .3f}</span><span class="ss"> kcal/mol"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyscf <span class="im">import</span> gto, scf, solvent</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>mol <span class="op">=</span> gto.Mole()</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>mol.atom <span class="op">=</span> <span class="st">'Cu 0 0 0'</span> </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>mol.basis <span class="op">=</span> <span class="st">'def2-svp'</span> </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>mol.charge <span class="op">=</span> <span class="dv">2</span> </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>mol.spin <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>mol.build()</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>mf <span class="op">=</span> scf.UKS(mol)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>mf.xc <span class="op">=</span> <span class="st">'PBE'</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>mf.verbose <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>mf.run()</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Add implicit solvent</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>mf_solvent <span class="op">=</span> solvent.ddCOSMO(mf)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>mf_solvent.with_solvent.eps <span class="op">=</span> <span class="fl">78.39</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>mf_solvent.verbose <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>mf_solvent.mo_coeff <span class="op">=</span> mf.mo_coeff</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>mf_solvent.run()</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Total energy in vacuum: </span><span class="sc">{</span>mf<span class="sc">.</span>e_tot<span class="sc">: .3f}</span><span class="ss"> Eh"</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Total energy in solvent: </span><span class="sc">{</span>mf_solvent<span class="sc">.</span>e_tot<span class="sc">: .3f}</span><span class="ss"> Eh"</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Solvation free energy: </span><span class="sc">{</span>(mf_solvent.e_tot <span class="op">-</span> mf.e_tot) <span class="op">*</span> <span class="fl">627.5</span><span class="sc">: .3f}</span><span class="ss"> kcal/mol"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Total energy in vacuum: -1638.931 Eh
 Total energy in solvent: -1639.475 Eh
@@ -292,89 +287,85 @@ Solvation free energy: -341.570 kcal/mol</code></pre>
 <h4 class="anchored" data-anchor-id="water-cluster-structures">Water cluster structures</h4>
 <p>Consider the two water clusters, with and without a copper-ion, preoptimized using PBE and def2-SVP basis set.</p>
 <p>We will use these clusters to calculate the gas-phase reaction for the binding of the copper-ion with the solvent molecules. We will also use them to calculate the solvation energy for each cluster. The solvated structure should be optimized, but we will neglect this step here since the calculations, albeit with a small basis set, are already quite cumbersome to run on a laptop/desktop.</p>
-<div id="08388679-f64e-4bfa-a1db-9183d3567beb" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>display(Image(filename<span class="op">=</span><span class="st">'solvationcluster.png'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="blog_compute_solvation_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="solvationcluster.png" class="img-fluid figure-img"></p>
+<figcaption>title</figcaption>
 </figure>
 </div>
-</div>
-</div>
 <div id="129046a6-f732-4cca-a6ab-04947a064cf0" class="cell" data-tags="[]" data-execution_count="80">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyscf.hessian <span class="im">import</span> thermo</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># First, compute copper with the 'solvation cluster'</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>coords <span class="op">=</span> <span class="st">'''</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="st">  Cu  0.00770670007957     -0.01075714803486      0.00684346198661</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="st">  O   1.62629858055350      0.59958796551543     -0.96137824606612</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="st">  H   2.38274772811028      0.05517739425091     -1.27095980213712</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="st">  H   1.63486316135084      1.44991263891621     -1.45427267152436</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="st">  O   -0.08513692098164      1.85563301721865      0.70772230089222</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="st">  H   -0.92091296008101      2.27895856953297      1.00777628197219</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="st">  H   0.63973505010478      2.22714364462856      1.26089012590088</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="st">  O   -0.16307318602147     -1.71475219698127     -1.01669913168950</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="st">  H   0.12868744546777     -1.79759035478399     -1.95233645651861</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="st">  H   -0.00508273379089     -2.58677644056665     -0.58749562922375</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="st">  O   -1.47600452153588     -0.67910102216609      1.13003992630434</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="st">  H   -1.68821978806555     -0.41530609819069      2.05174002936686</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="st">  H   -2.28219008519028     -1.07343020933916      0.72891087073636</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="st">'''</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>temperature <span class="op">=</span> <span class="fl">298.15</span>  <span class="co"># Standard temperature in K</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>pressure <span class="op">=</span> <span class="dv">101325</span>  <span class="co"># Standard pressure in Pa</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>mol_cluster <span class="op">=</span> gto.M(atom<span class="op">=</span>coords, basis<span class="op">=</span><span class="st">'def2-svp'</span>, charge<span class="op">=</span><span class="dv">2</span>, spin<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>mf_cluster <span class="op">=</span> scf.UKS(mol_cluster)</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>mf_cluster.xc <span class="op">=</span> <span class="st">'PBE'</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>mf_cluster.verbose <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>mf_cluster.run()</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>hessian <span class="op">=</span> mf_cluster.Hessian().kernel()</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequency analysis</span></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>freq_cluster <span class="op">=</span> thermo.harmonic_analysis(mf_cluster.mol, hessian)</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>thermo_cluster <span class="op">=</span> thermo.thermo(mf_cluster, freq_cluster[<span class="st">'freq_au'</span>], temperature, pressure)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyscf.hessian <span class="im">import</span> thermo</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># First, compute copper with the 'solvation cluster'</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>coords <span class="op">=</span> <span class="st">'''</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="st">  Cu  0.00770670007957     -0.01075714803486      0.00684346198661</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="st">  O   1.62629858055350      0.59958796551543     -0.96137824606612</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="st">  H   2.38274772811028      0.05517739425091     -1.27095980213712</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="st">  H   1.63486316135084      1.44991263891621     -1.45427267152436</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="st">  O   -0.08513692098164      1.85563301721865      0.70772230089222</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="st">  H   -0.92091296008101      2.27895856953297      1.00777628197219</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="st">  H   0.63973505010478      2.22714364462856      1.26089012590088</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="st">  O   -0.16307318602147     -1.71475219698127     -1.01669913168950</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="st">  H   0.12868744546777     -1.79759035478399     -1.95233645651861</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="st">  H   -0.00508273379089     -2.58677644056665     -0.58749562922375</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="st">  O   -1.47600452153588     -0.67910102216609      1.13003992630434</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="st">  H   -1.68821978806555     -0.41530609819069      2.05174002936686</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="st">  H   -2.28219008519028     -1.07343020933916      0.72891087073636</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="st">'''</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>temperature <span class="op">=</span> <span class="fl">298.15</span>  <span class="co"># Standard temperature in K</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>pressure <span class="op">=</span> <span class="dv">101325</span>  <span class="co"># Standard pressure in Pa</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>mol_cluster <span class="op">=</span> gto.M(atom<span class="op">=</span>coords, basis<span class="op">=</span><span class="st">'def2-svp'</span>, charge<span class="op">=</span><span class="dv">2</span>, spin<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>mf_cluster <span class="op">=</span> scf.UKS(mol_cluster)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>mf_cluster.xc <span class="op">=</span> <span class="st">'PBE'</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>mf_cluster.verbose <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>mf_cluster.run()</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>hessian <span class="op">=</span> mf_cluster.Hessian().kernel()</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequency analysis</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>freq_cluster <span class="op">=</span> thermo.harmonic_analysis(mf_cluster.mol, hessian)</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>thermo_cluster <span class="op">=</span> thermo.thermo(mf_cluster, freq_cluster[<span class="st">'freq_au'</span>], temperature, pressure)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="9c605d6a-af68-4c69-96b6-a19138184dad" class="cell" data-execution_count="81">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Second, compute just the 'solvation cluster'</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>coords <span class="op">=</span> <span class="st">'''</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="st">  O   1.59569157211650      0.52671408407826      0.55875125592345</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="st">  H   1.22572269113165      0.40613430342645     -0.37753454653395</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="st">  H   1.65562959781890     -0.39080578496591      0.88476545887585</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="st">  O   -1.80219894908837      1.36621874756072     -0.76471975545405</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="st">  H   -1.46831586426498      1.39336098953180      0.19232417112175</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="st">  H   -1.87403013018684      2.30887164269416     -1.00164540312905</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="st">  O   0.36899920133373      0.20801276276540     -1.77155683816915</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="st">  H   0.69644080847323      0.81096729919872     -2.46358962449703</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="st">  O   -0.64414560352736      1.46201234097889      1.62413639246884</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="st">  H   -0.47158383660499      2.36988722572480      1.93233540537252</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="st">  H   0.25833209306559      1.14749559670315      1.28200372985479</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="st">  H   -0.51999897026706      0.60946637230353     -1.49946089583396</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="st">'''</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>mol_solvent <span class="op">=</span> gto.M(atom<span class="op">=</span>coords, basis<span class="op">=</span><span class="st">'def2-svp'</span>, charge<span class="op">=</span><span class="dv">0</span>, spin<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>mf_solvent <span class="op">=</span> scf.UKS(mol_solvent)</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>mf_solvent.xc <span class="op">=</span> <span class="st">'PBE'</span></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>mf_solvent.verbose <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>mf_solvent.run()</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>hessian <span class="op">=</span> mf_solvent.Hessian().kernel()</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequency analysis</span></span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>freq_solvent <span class="op">=</span> thermo.harmonic_analysis(mf_solvent.mol, hessian)</span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>thermo_solvent <span class="op">=</span> thermo.thermo(mf_solvent, freq_solvent[<span class="st">'freq_au'</span>], temperature, pressure)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Second, compute just the 'solvation cluster'</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>coords <span class="op">=</span> <span class="st">'''</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="st">  O   1.59569157211650      0.52671408407826      0.55875125592345</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="st">  H   1.22572269113165      0.40613430342645     -0.37753454653395</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="st">  H   1.65562959781890     -0.39080578496591      0.88476545887585</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="st">  O   -1.80219894908837      1.36621874756072     -0.76471975545405</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="st">  H   -1.46831586426498      1.39336098953180      0.19232417112175</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="st">  H   -1.87403013018684      2.30887164269416     -1.00164540312905</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="st">  O   0.36899920133373      0.20801276276540     -1.77155683816915</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="st">  H   0.69644080847323      0.81096729919872     -2.46358962449703</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="st">  O   -0.64414560352736      1.46201234097889      1.62413639246884</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="st">  H   -0.47158383660499      2.36988722572480      1.93233540537252</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="st">  H   0.25833209306559      1.14749559670315      1.28200372985479</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="st">  H   -0.51999897026706      0.60946637230353     -1.49946089583396</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="st">'''</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>mol_solvent <span class="op">=</span> gto.M(atom<span class="op">=</span>coords, basis<span class="op">=</span><span class="st">'def2-svp'</span>, charge<span class="op">=</span><span class="dv">0</span>, spin<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>mf_solvent <span class="op">=</span> scf.UKS(mol_solvent)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>mf_solvent.xc <span class="op">=</span> <span class="st">'PBE'</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>mf_solvent.verbose <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>mf_solvent.run()</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>hessian <span class="op">=</span> mf_solvent.Hessian().kernel()</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequency analysis</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>freq_solvent <span class="op">=</span> thermo.harmonic_analysis(mf_solvent.mol, hessian)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>thermo_solvent <span class="op">=</span> thermo.thermo(mf_solvent, freq_solvent[<span class="st">'freq_au'</span>], temperature, pressure)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="28fe5b55-c41e-4139-af36-8e85fcc307c6" class="cell" data-execution_count="82">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Third, compute just the copper ion separately</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>coords <span class="op">=</span> <span class="st">'''</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="st">  Cu   0.0      0.0      0.0</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="st">'''</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>mol_cu <span class="op">=</span> gto.M(atom<span class="op">=</span>coords, basis<span class="op">=</span><span class="st">'def2-svp'</span>, charge<span class="op">=</span><span class="dv">2</span>, spin<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>mf_cu <span class="op">=</span> scf.UKS(mol_cu)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>mf_cu.xc <span class="op">=</span> <span class="st">'PBE'</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>mf_cu.verbose <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>mf_cu.run()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Third, compute just the copper ion separately</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>coords <span class="op">=</span> <span class="st">'''</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="st">  Cu   0.0      0.0      0.0</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="st">'''</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>mol_cu <span class="op">=</span> gto.M(atom<span class="op">=</span>coords, basis<span class="op">=</span><span class="st">'def2-svp'</span>, charge<span class="op">=</span><span class="dv">2</span>, spin<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>mf_cu <span class="op">=</span> scf.UKS(mol_cu)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>mf_cu.xc <span class="op">=</span> <span class="st">'PBE'</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>mf_cu.verbose <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>mf_cu.run()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="82">
 <pre><code>&lt;pyscf.dft.uks.UKS at 0x7fa11f128610&gt;</code></pre>
 </div>
@@ -383,46 +374,46 @@ Solvation free energy: -341.570 kcal/mol</code></pre>
 <p><span class="math display">\[S_\text{trans} = R \left( \ln \left( \frac{kT}{P} \left( \frac{2\pi mkT}{h^2} \right)^{\frac{3}{2}} \right) + \frac{5}{2} \right)
 \]</span></p>
 <div id="b0508533-86c4-41ee-90fd-b546d90ee5b7" class="cell" data-execution_count="83">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyscf.data <span class="im">import</span> nist</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Conversion factors from PySCF's NIST database</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>kB <span class="op">=</span> nist.BOLTZMANN</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> nist.PLANCK</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Gas constant in units of Hartree</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>R_Eh <span class="op">=</span> kB<span class="op">*</span>nist.AVOGADRO <span class="op">/</span> (nist.HARTREE2J <span class="op">*</span> nist.AVOGADRO)</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Mass of the atom</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>mass_tot <span class="op">=</span> np.<span class="bu">sum</span>(mol_cu.atom_mass_list()) <span class="op">*</span> nist.ATOMIC_MASS</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Sackur-Tetrode equation for the translational entropy</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>S_trans <span class="op">=</span> R_Eh <span class="op">*</span> (np.log((<span class="fl">2.0</span> <span class="op">*</span> np.pi <span class="op">*</span> mass <span class="op">*</span> kB <span class="op">*</span> temperature <span class="op">/</span> h<span class="op">**</span><span class="dv">2</span>)<span class="op">**</span><span class="fl">1.5</span> <span class="op">*</span> kB <span class="op">*</span> temperature <span class="op">/</span> pressure) <span class="op">+</span> <span class="dv">5</span><span class="op">/</span><span class="dv">2</span>)</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>thermo_cu <span class="op">=</span> mf_cu.e_tot <span class="op">-</span> temperature <span class="op">*</span> S_trans</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyscf.data <span class="im">import</span> nist</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Conversion factors from PySCF's NIST database</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>kB <span class="op">=</span> nist.BOLTZMANN</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> nist.PLANCK</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Gas constant in units of Hartree</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>R_Eh <span class="op">=</span> kB<span class="op">*</span>nist.AVOGADRO <span class="op">/</span> (nist.HARTREE2J <span class="op">*</span> nist.AVOGADRO)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Mass of the atom</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>mass_tot <span class="op">=</span> np.<span class="bu">sum</span>(mol_cu.atom_mass_list()) <span class="op">*</span> nist.ATOMIC_MASS</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Sackur-Tetrode equation for the translational entropy</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>S_trans <span class="op">=</span> R_Eh <span class="op">*</span> (np.log((<span class="fl">2.0</span> <span class="op">*</span> np.pi <span class="op">*</span> mass <span class="op">*</span> kB <span class="op">*</span> temperature <span class="op">/</span> h<span class="op">**</span><span class="dv">2</span>)<span class="op">**</span><span class="fl">1.5</span> <span class="op">*</span> kB <span class="op">*</span> temperature <span class="op">/</span> pressure) <span class="op">+</span> <span class="dv">5</span><span class="op">/</span><span class="dv">2</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>thermo_cu <span class="op">=</span> mf_cu.e_tot <span class="op">-</span> temperature <span class="op">*</span> S_trans</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="d5e8926b-b57f-4e66-b8e1-4335b1547e30" class="cell" data-execution_count="84">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dGbind_gas <span class="op">=</span> (thermo_cluster[<span class="st">'G_tot'</span>][<span class="dv">0</span>] <span class="op">-</span> thermo_solvent[<span class="st">'G_tot'</span>][<span class="dv">0</span>] <span class="op">-</span> thermo_cu) <span class="op">*</span> <span class="fl">627.5</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Gibbs free energy for the gas-phase reaction: </span><span class="sc">{</span>dGbind_gas<span class="sc">: .3f}</span><span class="ss"> kcal/mol"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>dGbind_gas <span class="op">=</span> (thermo_cluster[<span class="st">'G_tot'</span>][<span class="dv">0</span>] <span class="op">-</span> thermo_solvent[<span class="st">'G_tot'</span>][<span class="dv">0</span>] <span class="op">-</span> thermo_cu) <span class="op">*</span> <span class="fl">627.5</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Gibbs free energy for the gas-phase reaction: </span><span class="sc">{</span>dGbind_gas<span class="sc">: .3f}</span><span class="ss"> kcal/mol"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Gibbs free energy for the gas-phase reaction: -299.312 kcal/mol</code></pre>
 </div>
 </div>
 <p>The solvation energies are computed from the electronic energies between the gas-phase and solvated molecules.</p>
 <div id="279d07a0-1be9-4fda-9f35-1c222962a009" class="cell" data-execution_count="71">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add implicit solvent to cluster and solvent</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>mf_cluster_solvation <span class="op">=</span> solvent.ddCOSMO(mf_cluster)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>mf_cluster_solvation.with_solvent.eps <span class="op">=</span> <span class="fl">78.39</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>mf_cluster_solvation.verbose <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>mf_cluster_solvation.mo_coeff <span class="op">=</span> mf_cluster.mo_coeff</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>mf_cluster_solvation.run()</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>mf_solvent_solvation <span class="op">=</span> solvent.ddCOSMO(mf_solvent)</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>mf_solvent_solvation.with_solvent.eps <span class="op">=</span> <span class="fl">78.39</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>mf_solvent_solvation.verbose <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>mf_solvent_solvation.mo_coeff <span class="op">=</span> mf_solvent.mo_coeff</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>mf_solvent_solvation.run()</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>dGsolv_cluster <span class="op">=</span> (mf_cluster_solvation.e_tot <span class="op">-</span> mf_cluster.e_tot) <span class="op">*</span> <span class="fl">627.5</span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>dGsolv_solvent <span class="op">=</span> (mf_solvent_solvation.e_tot <span class="op">-</span> mf_solvent.e_tot) <span class="op">*</span> <span class="fl">627.5</span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Solvations free energies for the cluster: </span><span class="sc">{</span>dGsolv_cluster<span class="sc">: .3f}</span><span class="ss"> kcal/mol"</span>)</span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Solvations free energies for the solvent: </span><span class="sc">{</span>dGsolv_solvent<span class="sc">: .3f}</span><span class="ss"> kcal/mol"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add implicit solvent to cluster and solvent</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>mf_cluster_solvation <span class="op">=</span> solvent.ddCOSMO(mf_cluster)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>mf_cluster_solvation.with_solvent.eps <span class="op">=</span> <span class="fl">78.39</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>mf_cluster_solvation.verbose <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>mf_cluster_solvation.mo_coeff <span class="op">=</span> mf_cluster.mo_coeff</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>mf_cluster_solvation.run()</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>mf_solvent_solvation <span class="op">=</span> solvent.ddCOSMO(mf_solvent)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>mf_solvent_solvation.with_solvent.eps <span class="op">=</span> <span class="fl">78.39</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>mf_solvent_solvation.verbose <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>mf_solvent_solvation.mo_coeff <span class="op">=</span> mf_solvent.mo_coeff</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>mf_solvent_solvation.run()</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>dGsolv_cluster <span class="op">=</span> (mf_cluster_solvation.e_tot <span class="op">-</span> mf_cluster.e_tot) <span class="op">*</span> <span class="fl">627.5</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>dGsolv_solvent <span class="op">=</span> (mf_solvent_solvation.e_tot <span class="op">-</span> mf_solvent.e_tot) <span class="op">*</span> <span class="fl">627.5</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Solvations free energies for the cluster: </span><span class="sc">{</span>dGsolv_cluster<span class="sc">: .3f}</span><span class="ss"> kcal/mol"</span>)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Solvations free energies for the solvent: </span><span class="sc">{</span>dGsolv_solvent<span class="sc">: .3f}</span><span class="ss"> kcal/mol"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Solvations free energies for the cluster: -202.658 kcal/mol
 Solvations free energies for the solvent: -8.953 kcal/mol</code></pre>
@@ -430,7 +421,7 @@ Solvations free energies for the solvent: -8.953 kcal/mol</code></pre>
 </div>
 <p>We also need to account for the change in the standard state when going from gas-phase to the solution phase:</p>
 <div id="cc227bdf-f899-4186-97c5-1a2d54e757de" class="cell" data-execution_count="85">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Solvation free energy of copper(II) in water: </span><span class="sc">{</span>dGbind_gas <span class="op">+</span> dGsolv_cluster <span class="op">-</span> dGsolv_solvent<span class="sc">: .3f}</span><span class="ss"> kcal/mol"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Solvation free energy of copper(II) in water: </span><span class="sc">{</span>dGbind_gas <span class="op">+</span> dGsolv_cluster <span class="op">-</span> dGsolv_solvent<span class="sc">: .3f}</span><span class="ss"> kcal/mol"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Solvation free energy of copper(II) in water: -493.016 kcal/mol</code></pre>
 </div>
