@@ -1,13 +1,14 @@
 ---
 title: "Timo Weckman"
-subtitle: "Computational Chemistry · Electronic Structure · Catalysis"
+subtitle: "Computational Chemistry"
+description: "Personal website of Timo Weckman, a university researcher and an adjunct professor in computational chemistry focusing on green chemistry,  heterogeneous catalysis, electrochemistry, and surface chemistry."
 keywords:
   - Density functional theory
-  - Quantum chemistry
+#  - Quantum chemistry
   - Computational chemistry
-  - Python programming
+#  - Python programming
   - Tutorials
-  - Helsinki
+#  - Helsinki
 page-layout: full
 format:
   html:
@@ -17,13 +18,13 @@ format:
 ## About me
 
 
-I am a university researcher at the University of Jyväskylä, working on heterogeneous catalysis, electrochemistry and surface chemistry. 
+I am a university researcher at the University of Jyväskylä, working on heterogeneous catalysis, machine learning methods and modeling related to green chemistry. 
 I have a Master's degree in Chemical Technology and a PhD in Computational Chemistry from Aalto University as well as Master's degree from Mathematics from the University of Helsinki and a strong background in chemistry, physics and programming. 
-I have a lot of experience in interdisciplinary collaboration, communicating my own work to colleagues and helping them to apply my results in their work. 
-I also have a long history of teaching to a wide range of audiences, from freshmen to graduate students.
+Communicating my work to colleagues and collaborators and helping them to apply my results in their work is a big part of what I do and I have a long history in interdisciplinary collaboration. 
+I also enjoy teaching and regularly lecture to a wide range of audiences, from freshmen to graduate students. 
 My publication list can be found [here](publications.qmd).
 
-Below I have collected some notes and tutorials. For those who come after.
+Below I have collected some notes and tutorials, for those who come after.
 
 ## Blog posts
 
