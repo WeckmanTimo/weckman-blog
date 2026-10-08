@@ -4,11 +4,8 @@ subtitle: "Computational Chemistry"
 description: "Personal website of Timo Weckman, a university researcher and an adjunct professor in computational chemistry focusing on green chemistry,  heterogeneous catalysis, electrochemistry, and surface chemistry."
 keywords:
   - Density functional theory
-#  - Quantum chemistry
   - Computational chemistry
-#  - Python programming
   - Tutorials
-#  - Helsinki
 page-layout: full
 format:
   html:
