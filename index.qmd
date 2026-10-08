@@ -1,6 +1,13 @@
 ---
-#title: "Timo Weckman"
-#subtitle: "Computational Chemistry · Electronic Structure · Catalysis"
+title: "Timo Weckman"
+subtitle: "Computational Chemistry · Electronic Structure · Catalysis"
+keywords:
+  - Density functional theory
+  - Quantum chemistry
+  - Computational chemistry
+  - Python programming
+  - Tutorials
+  - Helsinki
 page-layout: full
 format:
   html:

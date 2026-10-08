@@ -3,7 +3,10 @@ project:
   output-dir: docs
 
 website:
-  title: "Timo Weckman"
+  title: "Timo Weckman Webpage"
+  site-url: "https://weckmantimo.github.io/weckman-blog/"
+  open-graph: true
+  twitter-card: true
   navbar:
     left:
       - text: Home
