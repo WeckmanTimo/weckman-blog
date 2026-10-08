@@ -6,6 +6,21 @@ keywords:
   - Density functional theory
   - Computational chemistry
   - Tutorials
+about:
+  template: trestles
+  image: profile.jpg # Replace with the filename of your picture once you upload it
+  links:
+    - icon: linkedin
+      text: LinkedIn
+      href: https://linkedin.com/in/timo-weckman-829327123/
+    - icon: mortarboard
+      text: Google Scholar
+      href: https://scholar.google.com/citations?user=JLvgAfYAAAAJ
+    - text: ORCID
+      href: https://orcid.org/0000-0001-8721-560X
+    - icon: github
+      text: GitHub
+      href: https://github.com/WeckmanTimo
 page-layout: full
 format:
   html:
