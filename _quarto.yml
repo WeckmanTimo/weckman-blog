@@ -22,6 +22,7 @@ website:
 format:
   html:
     theme: cosmo
-    css: assets/css/custom.css
+    css: styles.css
+    include-in-header: _includes/meta.html
     include-before-body: _includes/header.html
     include-after-body: _includes/footer.html
