@@ -16,12 +16,10 @@ website:
       - text: Blog posts
         file: blog_index.qmd
     right:
-      - icon: github
-        href: https://github.com/weckmantimo
-      - icon: linkedin
-        href: https://linkedin.com/in/timo-weckman-829327123/
       - icon: mortarboard
         href: https://scholar.google.com/citations?user=JLvgAfYAAAAJ
+      - icon: linkedin
+        href: https://linkedin.com/in/timo-weckman-829327123/
       - text: "ORCID"
         href: https://orcid.org/0000-0001-8721-560X
       - icon: github
