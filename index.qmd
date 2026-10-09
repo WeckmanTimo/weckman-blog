@@ -1,14 +1,11 @@
 ---
 title: "Timo Weckman"
-subtitle: "Computational Chemistry"
-description: "Personal website of Timo Weckman, a university researcher and an adjunct professor in computational chemistry focusing on green chemistry,  heterogeneous catalysis, electrochemistry, and surface chemistry."
-keywords:
-  - Density functional theory
-  - Computational chemistry
-  - Tutorials
+description: "I am a university teacher and an adjunct professor (docent) at the University of Jyväskylä. This is my personal webpage, containing my publications and some tutorials on computational chemistry."
 about:
   template: trestles
   image: portrait.jpg # Replace with the filename of your picture once you upload it
+  image-shape: round      # Options: 'round' (circle), 'rounded' (rounded corners), or 'rectangle'
+  image-width: 15em
 page-layout: full
 format:
   html:
@@ -17,10 +14,10 @@ format:
 
 ## About me
 
-
-I am a university researcher at the University of Jyväskylä, working on heterogeneous catalysis, machine learning methods and modeling related to green chemistry. 
-I have a Master's degree in Chemical Technology and a PhD in Computational Chemistry from Aalto University as well as Master's degree from Mathematics from the University of Helsinki and a strong background in chemistry, physics and programming. 
-Communicating my work to colleagues and collaborators and helping them to apply my results in their work is a big part of what I do and I have a long history in interdisciplinary collaboration. 
+I am a university researcher at the University of Jyväskylä, working on computational chemistry, machine learning methods and modeling related to catalysis and green chemistry. 
+I have a Master's degree in Chemical Technology and a PhD in Computational Chemistry from Aalto University as well as Master's degree from Mathematics from the University of Helsinki. 
+My current research focus is in modeling complex oxide-metal interfaces, molecular diffusion in porous materials, hydrogen storage in metal-organic frameworks and electrocatalytic CO2 conversion. 
+I work with wide network of experimental collaborators and help them apply my results in their work. 
 I also enjoy teaching and regularly lecture to a wide range of audiences, from freshmen to graduate students. 
 My publication list can be found [here](publications.qmd).
 

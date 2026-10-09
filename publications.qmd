@@ -7,9 +7,20 @@
 </p>
 
 <section>
-    <h3>Journal Articles</h3>
+<h3>Journal Articles</h3>
 
-    <ol class="publications">
+<ol class="publications">
+
+<li>
+    <span class="authors">
+        <strong>Timo Weckman</strong>, Hanan H. Ibrahim, Karoliina Honkala
+    </span>,
+    <span class="title">
+        “Unraveling the ligand effect on acrolein hydrogenation on Pd (111): Insights from first-principles calculations”
+    </span>,
+    <span class="journal">Journal of Catalysis</span>
+    <strong>456</strong>, 116765 (2026).
+</li>
 
 <li>
     <span class="authors">
@@ -235,10 +246,10 @@
 </li>
 
 
-    </ol>
+</ol>
 </section>
 
 <p>
-    An up-to-date list, including links to the publciations can be found on 
+    An up-to-date list, including links to the publications can be found on 
     <a href="https://scholar.google.fi/citations?user=JLvgAfYAAAAJ">Google Scholar</a>.
 </p>
